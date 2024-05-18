@@ -1,0 +1,38 @@
+body {
+  background-color: #FFFFFF;
+}
+
+.container {
+  max-width: none;
+  margin: 10px 0px;
+}
+
+h1 {
+  color: #000000;
+}
+
+td {
+  color: #000000;
+}
+
+
+.checkbox-complete{
+  display: inline-block;
+}
+
+.select-update-user{
+  display: inline-block;
+  visibility: hidden;
+}
+
+#cancel-textarea {
+  resize: none;
+  width:450px;
+  height:125px;
+}
+
+/**
+.td-operation {
+  width: max-content;
+}
+*/
