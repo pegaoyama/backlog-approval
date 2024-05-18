@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/style.css?20211027">
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/pepper-grinder/jquery-ui.css">
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+    <script src="./js/main.js?20211027"></script>
+
+    <title>申請一覧</title>
+    <link rel="icon" href="./image/pega_logo.png?20211027">
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="m-1">申請一覧</h1>
+      <div class="m-1 btn-group btn-group-toggle" data-toggle="buttons">
+        <label class="btn btn-secondary active">
+          <input type="radio" name="issue-type" id="option1" value="1" autocomplete="off" checked> 各種届出
+        </label>
+        <label class="btn btn-secondary">
+          <input type="radio" name="issue-type" id="option2" value="2" autocomplete="off"> MTG申請
+        </label>
+      </div>
+      <div class="checkbox-complete">
+        <input type="checkbox" name="status" value="1">完了済
+      </div>
+      <div class="select-update-user">
+        確認者：
+        <select id="update-user">
+          <option value="0" selected>長瀬</option>
+          <option value="1">口石</option>
+          <option value="2">藤田</option>
+          <option value="3">田畑</option>
+          <option value="4">高橋</option>
+          <option value="5">柳澤</option>
+        </select>
+      </div>
+      <table id="issue_list_table" class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col" style="width: 15%">件名</th>
+            <th scope="col" style="width: 12%">有給等</th>
+            <th scope="col" style="width: 8%">取得日（開始）</th>
+            <th scope="col" style="width: 8%">取得日（終了）</th>
+            <th scope="col" style="width: 5%">起票日</th>
+            <th scope="col" style="width: 32%">詳細</th>
+            <th scope="col" style="width: 8%">担当者</th>
+            <th scope="col" style="width: 6%">状態</th>
+            <th scope="col" style="width: 6%">操作</th>
+          </tr>
+        </thead>
+        <!-- テーブル追加用 -->
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- 承認ダイアログ --> 
+    <div style="display: none;">
+      <div id="point-dialog">
+        <select id="select-point">
+          <option value="0" selected>マイナス無し</option>
+          <option value="448963">-5Pt</option>
+          <option value="448962">-10Pt</option>
+          <option value="464338">-20Pt</option>
+          <option value="464339">-30Pt</option>
+          <option value="464340">-40Pt</option>
+          <option value="464341">-50Pt</option>
+        </select>
+      </div>
+    </div>
+    
+    <!-- 却下ダイアログ --> 
+    <div style="display: none;">
+      <div id="cancel-dialog">
+        <td><textarea id="cancel-textarea" placeholder="却下理由を記載してください"></textarea>
+      </div>
+    </div>
+ 
+  </body>
+</html>
