@@ -65,7 +65,7 @@ $(function () {
 				+ '&' + 'issueTypeId[]=' + IS_ID_OTHER		// 種別指定：その他申請
 				+ '&' + 'issueTypeId[]=' + IS_ID_CHANGE	// 種別指定：定期代・住居変更申請
 				+ '&' + 'statusId[]=' + '4'					// 完了
-				+ '&' + 'order=' + 'asc'					// 昇順
+				+ '&' + 'order=' + 'desc'					// 降順
 				+ '&' + 'count=' + '100'					// 取得件数
 
 				;
@@ -85,7 +85,7 @@ $(function () {
 					+ '&' + 'statusId[]=' + '1'					// 未対応
 					+ '&' + 'statusId[]=' + '2'					// 処理中
 					+ '&' + 'statusId[]=' + '3'					// 処理済み
-					+ '&' + 'order=' + 'asc'					// 昇順
+					+ '&' + 'order=' + 'desc'					// 降順
 					+ '&' + 'count=' + '100'					// 取得件数
 					;
 			}
@@ -98,7 +98,7 @@ $(function () {
 					+ '&' + 'projectId[]=' + PROJ_ID			// プロジェクト指定
 					+ '&' + 'issueTypeId[]=' + IS_ID_MTG	// 種別指定：MTG申請
 					+ '&' + 'statusId[]=' + '4'					// 完了
-					+ '&' + 'order=' + 'asc'					// 昇順
+					+ '&' + 'order=' + 'desc'					// 降順
 					+ '&' + 'count=' + '100'					// 取得件数
 					;
 			}else{
@@ -109,7 +109,7 @@ $(function () {
 					+ '&' + 'statusId[]=' + '1'					// 未対応
 					+ '&' + 'statusId[]=' + '2'					// 処理中
 					+ '&' + 'statusId[]=' + '3'					// 処理済み
-					+ '&' + 'order=' + 'asc'					// 昇順
+					+ '&' + 'order=' + 'dec'					// 降順
 					+ '&' + 'count=' + '100'					// 取得件数
 					;
 			}
