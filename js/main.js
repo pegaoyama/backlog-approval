@@ -1,25 +1,45 @@
-$(function () {
-	// Backlog 情報
-	var api_key_for_nagase = 'kQwZHGM6XRmzXphZlOCZ5h2eAIhAeWCHDxR0uhdn9rkA2rADp6VrpKAuj9PIyvVb' // 長瀬更新用
-	var api_key_for_kuchiishi = 'LGJg5EXVJQiou7QH4AlnEcKARyAKdUn8mnwqJNI6Es5VMp0HzAra7RJLuGkmo0IP' // 口石更新用
-	var api_key_for_fujita = 'Okwv4SZqX2cLgrMwXRIOkOi3p9gBstBb7hcApE5zIWHNF3tBK3ecKUSTT0lnjAYG' // 藤田更新用
-	var api_key_for_tabata = 'Z1z5mnlPtaYNXyt4b0pjVc8dTrSsoW4A56DlSKw33k0TiOX7qLoe9aTZM6IkJPj5' // 田畑更新用
-	var api_key_for_yanagisawa = 'QyvPAZmNxUF3EErxHtk1C5Q64AoYQMzZ51kE2HQ0LllTZ8aC5pepsRz8os3fOxjI' // 柳澤更新用
-	var api_key_for_takahashi = 'wZnQeH5srC2REDvNM1nIa8GYa6A72qCn6rCrt1aRECUsMsIfo41qDcfDyA836Tuo' // 高橋更新用
-	var base_url = 'https://pega-sys.backlog.com'
-	var project_id = '215642'	// プロジェクト：各種申請
-	var issuetype_id_mtgapply = '1045530'	// 種別：MTG申請
-	var issuetype_id_holiday = '1045645'	// 種別：休暇申請
-	var issuetype_id_behindtime = '1045529'	// 種別：遅刻申請
-	var issuetype_id_leaveearly = '1045528'	// 種別：早退申請
-	var issuetype_id_holidaywork = '1045713'	// 種別：休出申請
-	var issuetype_id_workremotely = '1045714'	// 種別：在宅申請
-	var issuetype_id_waitinghome = '1061609'	// 種別：自宅待機申請
-	var issuetype_id_othersapply = '1045531'	// 種別：その他申請
-	var status_id_rejected = '59558'			// 状態：却下
-	var assignee_id = '408915'	// 担当者：長瀬紗耶
+var API_KEY = 'kQwZHGM6XRmzXphZlOCZ5h2eAIhAeWCHDxR0uhdn9rkA2rADp6VrpKAuj9PIyvVb' // 更新用
+var BASE_URL = 'https://pega-sys.backlog.com'
+var PROJ_ID = '215642'	// プロジェクト：各種申請
+var IS_ID_MTG = '1045530'	// 種別：MTG申請
+var IS_ID_HOLIDAY = '1045645'	// 種別：休暇申請
+var IS_ID_LATE = '1045529'	// 種別：遅刻申請
+var IS_ID_EARLY = '1045528'	// 種別：早退申請
+var IS_ID_HOLIDAYWORK = '1045713'	// 種別：休出申請
+var IS_ID_REMOTE = '1045714'	// 種別：在宅申請
+var IS_ID_WAIT = '1061609'	// 種別：自宅待機申請
+var IS_ID_OTHER = '1045531'	// 種別：その他申請
+var IS_ID_CHANGE = '1069593'	// 種別：定期代・住居変更申請
+var STATUS_ID_REJECT = '59558'			// 状態：却下
+var ASSIGN_ID = '408915'					// 担当者：長瀬紗耶
 
-	var exp = /((?<!href="|href='|src="|src=')(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+$(function () {
+	/** jQueryが読まれた時 */
+	$(document).ready(function () {
+		// 課題一覧の取得
+		get_tickets();
+	});
+
+
+	/** タブを変更 */
+	$('input[name="issue-type"]:radio').on('change',function () {
+
+		// タブの表示切り替え
+		$('.btn-secondary').removeClass('active');
+		$(this).parent().addClass('active');
+		
+		// 課題一覧の取得
+		get_tickets();
+	});
+
+	
+	/** チェックボックス変更 */
+	$('input[name="status"]:checkbox').on('change',function () {
+
+		// 課題一覧の取得
+		get_tickets();
+	});
+	
 
 	/** 届出課題一覧を取得 */
 	function get_tickets() {
@@ -33,33 +53,35 @@ $(function () {
 		if (kbn == '1') {
 			// 届出取得用URL
 			if (check){
-				url = base_url + '/api/v2/issues'
-				+ '?' + 'apiKey=' + api_key_for_nagase
-				+ '&' + 'projectId[]=' + project_id						// プロジェクト指定
-				+ '&' + 'issueTypeId[]=' + issuetype_id_holiday			// 種別指定：休暇申請
-				+ '&' + 'issueTypeId[]=' + issuetype_id_behindtime		// 種別指定：遅刻申請
-				+ '&' + 'issueTypeId[]=' + issuetype_id_leaveearly		// 種別指定：早退申請
-				+ '&' + 'issueTypeId[]=' + issuetype_id_holidaywork		// 種別指定：休出申請
-				+ '&' + 'issueTypeId[]=' + issuetype_id_workremotely	// 種別指定：在宅申請
-				+ '&' + 'issueTypeId[]=' + issuetype_id_waitinghome		// 種別指定：自宅待機申請
-				+ '&' + 'issueTypeId[]=' + issuetype_id_othersapply		// 種別指定：その他申請
+				url = BASE_URL + '/api/v2/issues'
+				+ '?' + 'apiKey=' + API_KEY
+				+ '&' + 'projectId[]=' + PROJ_ID						// プロジェクト指定
+				+ '&' + 'issueTypeId[]=' + IS_ID_HOLIDAY			// 種別指定：休暇申請
+				+ '&' + 'issueTypeId[]=' + IS_ID_LATE		// 種別指定：遅刻申請
+				+ '&' + 'issueTypeId[]=' + IS_ID_EARLY		// 種別指定：早退申請
+				+ '&' + 'issueTypeId[]=' + IS_ID_HOLIDAYWORK		// 種別指定：休出申請
+				+ '&' + 'issueTypeId[]=' + IS_ID_REMOTE	// 種別指定：在宅申請
+				+ '&' + 'issueTypeId[]=' + IS_ID_WAIT		// 種別指定：自宅待機申請
+				+ '&' + 'issueTypeId[]=' + IS_ID_OTHER		// 種別指定：その他申請
+				+ '&' + 'issueTypeId[]=' + IS_ID_CHANGE	// 種別指定：定期代・住居変更申請
 				+ '&' + 'statusId[]=' + '4'					// 完了
 				+ '&' + 'order=' + 'asc'					// 昇順
 				+ '&' + 'count=' + '100'					// 取得件数
 
 				;
 			}else{
-				url = base_url + '/api/v2/issues'
-					+ '?' + 'apiKey=' + api_key_for_nagase
-					+ '&' + 'projectId[]=' + project_id						// プロジェクト指定
-					+ '&' + 'issueTypeId[]=' + issuetype_id_holiday			// 種別指定：休暇申請
-					+ '&' + 'issueTypeId[]=' + issuetype_id_behindtime		// 種別指定：遅刻申請
-					+ '&' + 'issueTypeId[]=' + issuetype_id_leaveearly		// 種別指定：早退申請
-					+ '&' + 'issueTypeId[]=' + issuetype_id_holidaywork		// 種別指定：休出申請
-					+ '&' + 'issueTypeId[]=' + issuetype_id_workremotely	// 種別指定：在宅申請
-					+ '&' + 'issueTypeId[]=' + issuetype_id_waitinghome		// 種別指定：自宅待機申請
-					+ '&' + 'issueTypeId[]=' + issuetype_id_othersapply		// 種別指定：その他申請
-					+ '&' + 'assigneeId[]=' + assignee_id		// 担当者
+				url = BASE_URL + '/api/v2/issues'
+					+ '?' + 'apiKey=' + API_KEY
+					+ '&' + 'projectId[]=' + PROJ_ID						// プロジェクト指定
+					+ '&' + 'issueTypeId[]=' + IS_ID_HOLIDAY			// 種別指定：休暇申請
+					+ '&' + 'issueTypeId[]=' + IS_ID_LATE		// 種別指定：遅刻申請
+					+ '&' + 'issueTypeId[]=' + IS_ID_EARLY		// 種別指定：早退申請
+					+ '&' + 'issueTypeId[]=' + IS_ID_HOLIDAYWORK		// 種別指定：休出申請
+					+ '&' + 'issueTypeId[]=' + IS_ID_REMOTE	// 種別指定：在宅申請
+					+ '&' + 'issueTypeId[]=' + IS_ID_WAIT		// 種別指定：自宅待機申請
+					+ '&' + 'issueTypeId[]=' + IS_ID_OTHER		// 種別指定：その他申請
+					+ '&' + 'issueTypeId[]=' + IS_ID_CHANGE	// 種別指定：定期代・住居変更申請
+					+ '&' + 'assigneeId[]=' + ASSIGN_ID		// 担当者
 					+ '&' + 'statusId[]=' + '1'					// 未対応
 					+ '&' + 'statusId[]=' + '2'					// 処理中
 					+ '&' + 'statusId[]=' + '3'					// 処理済み
@@ -71,19 +93,19 @@ $(function () {
 		} else {
 			// MTG申請取得用URL
 			if (check){
-				url = base_url + '/api/v2/issues'
-					+ '?' + 'apiKey=' + api_key_for_nagase
-					+ '&' + 'projectId[]=' + project_id			// プロジェクト指定
-					+ '&' + 'issueTypeId[]=' + issuetype_id_mtgapply	// 種別指定：MTG申請
+				url = BASE_URL + '/api/v2/issues'
+					+ '?' + 'apiKey=' + API_KEY
+					+ '&' + 'projectId[]=' + PROJ_ID			// プロジェクト指定
+					+ '&' + 'issueTypeId[]=' + IS_ID_MTG	// 種別指定：MTG申請
 					+ '&' + 'statusId[]=' + '4'					// 完了
 					+ '&' + 'order=' + 'asc'					// 昇順
 					+ '&' + 'count=' + '100'					// 取得件数
 					;
 			}else{
-				url = base_url + '/api/v2/issues'
-					+ '?' + 'apiKey=' + api_key_for_nagase
-					+ '&' + 'projectId[]=' + project_id			// プロジェクト指定
-					+ '&' + 'issueTypeId[]=' + issuetype_id_mtgapply	// 種別指定：MTG申請
+				url = BASE_URL + '/api/v2/issues'
+					+ '?' + 'apiKey=' + API_KEY
+					+ '&' + 'projectId[]=' + PROJ_ID			// プロジェクト指定
+					+ '&' + 'issueTypeId[]=' + IS_ID_MTG	// 種別指定：MTG申請
 					+ '&' + 'statusId[]=' + '1'					// 未対応
 					+ '&' + 'statusId[]=' + '2'					// 処理中
 					+ '&' + 'statusId[]=' + '3'					// 処理済み
@@ -93,14 +115,22 @@ $(function () {
 			}
 		}
 
-		var issue_list = $.getJSON(url, function (data, textStatus, jqXHR) { });
-
-		issue_list.done(function (data) {
-			// テーブルに追加
-			set_tables(data);
-
-		}).fail(function () {
-			console.log("error");	
+		fetch(url)
+		.then(response => {
+		  if (!response.ok) {
+			// ステータスコードが成功（200）でない場合はエラーメッセージを表示
+			throw new Error(`Error: ${response.status} - ${response.statusText}`);
+		  }
+		  // レスポンスをJSON形式に変換して返す
+		  return response.json();
+		})
+		.then(data => {
+		  // 課題一覧を表示
+		  set_tables(data);
+		})
+		.catch(error => {
+		  // エラー時の処理
+		  console.error('Error fetching issue:', error);
 		});
 	};
 
@@ -152,6 +182,9 @@ $(function () {
 						category += data[i]["category"][j]["name"] + '<br>'	// カテゴリ
 					}
 				}
+			}else{
+				// カテゴリ未設定の場合は、カテゴリIDとして空白文字を設定しておく(承認時の兼ね合い)
+				category_id.push('');
 			}
 
 			var summary = data[i]["summary"];				// 件名
@@ -159,6 +192,18 @@ $(function () {
 			var assignee = data[i]["assignee"]["name"];		// 担当者
 			var status = data[i]["status"]["name"];			// 状態
 			var create_user = data[i]["createdUser"]["id"];	// 課題申請者
+
+			var issuetype = data[i]["issueType"]["id"]		// 課題種別
+			
+			var file_link = '';
+			// 定期代・住居変更申請の場合、ファイルDLリンクを作成する
+			if (issuetype == IS_ID_CHANGE){
+				var file_id = data[i]["attachments"][0]["id"]		// 添付ファイルID
+				var file_name = data[i]["attachments"][0]["name"]	// 添付ファイル名
+				
+				file_link =  '<br><a href="#" onclick="getFile(\''+issueKey+'\',\''+file_id+'\',\''+file_name+'\'); return false;">'+file_name+'</a>';
+				// getFile(issueKey,file_id,file_name);
+			}
 
 			// 詳細の改行を変換
 			description = description.replace(/\r?\n/g, '<br>');
@@ -170,7 +215,7 @@ $(function () {
 
 			var td_category = $('<td>' + category + '</td>')
 			var td_summary = $('<td>' + summary + '</td>')
-			var td_description = $('<td><div id="td-description-' + keyId + '">' + description + '</div></td>')
+			var td_description = $('<td><div id="td-description-' + keyId + '">' + description + file_link + '</div></td>')
 			var td_assignee = $('<td>' + assignee + '</td>')
 			var td_status = $('<td>' + status + '</td>')
 			
@@ -192,6 +237,7 @@ $(function () {
 
 			$('tbody').append(tr);
 			// 詳細のURLをリンク付きに変換
+			var exp = /((?<!href="|href='|src="|src=')(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
 			$('#td-description-' + keyId).html($('#td-description-' + keyId).html().replace(exp, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'))
 		}
 	};
@@ -200,22 +246,13 @@ $(function () {
 	/** 課題の更新(承認) */
 	function update_ticket_approval(issuekey ,ctruser, selectpoint='0', category='') {
 		var kbn = $('input[name="issue-type"]:checked').val();
-		var update_user = $('#update-user').val()
 
 		// url生成
 		var url = create_url(issuekey);
 
-		// 承認時のパラメータ
-		var payload = {}
-		if (kbn == '2' && update_user != '0'){
-			// MTG申請かつ長瀬さん以外の更新の場合、処理済みに変更して長瀬さんに担当変更する
-			payload = {"statusId": '3',"assigneeId": assignee_id} 
-		}else{
-			// MTG申請かつ長瀬さん更新の場合
-			// MTG申請ではない場合、完了にして課題作成者に担当変更する
-			payload = {"statusId": '4',"assigneeId": ctruser} 
-		}
-		
+		// MTG申請の場合、完了にして課題作成者に担当変更する
+		var payload = {"statusId": '4',"assigneeId": ctruser} 
+
 		if (selectpoint != '0'){
 			// マイナス設定なし以外かつカテゴリ設定済みの場合、設定されているカテゴリ＋マイナスポイントを設定する
 			if(category != ''){
@@ -238,13 +275,14 @@ $(function () {
 
 		// 却下時のパラメータ
 		var payload = {
-			"statusId": status_id_rejected, // 状態：却下
+			"statusId": STATUS_ID_REJECT, // 状態：却下
 			"assigneeId": ctruser,			// 担当者：申請者
 			"comment": comment				// コメント
 		}
 
 		return ajax(url,payload);
 	};
+
 
 	/** 課題の更新(差戻) */
 	function update_ticket_remand(issuekey,category) {
@@ -263,88 +301,6 @@ $(function () {
 		return ajax(url,payload);
 	};
 
-	
-	function create_url(issuekey) {
-		var user = $('#update-user').val()
-		var kbn = $('input[name="issue-type"]:checked').val();
-
-		// 初期値は長瀬さんの設定
-		var apikey = api_key_for_nagase
-
-		if (kbn == '2'){
-			// MTG申請ならばプルダウンを参照して、更新者を変更する
-			if (user == '0'){
-				apikey = api_key_for_nagase
-			}else if(user == '1'){
-				apikey = api_key_for_kuchiishi
-			}else if(user == '2'){
-				apikey = api_key_for_fujita
-			}else if(user == '3'){
-				apikey = api_key_for_tabata
-			}else if(user == '4'){
-				apikey = api_key_for_takahashi
-			}else if(user == '5'){
-				apikey = api_key_for_yanagisawa
-			}
-		}
-
-		// url生成
-		var url = base_url + '/api/v2/issues'
-		+ '/' + issuekey
-		+ '?' + 'apiKey=' + apikey
-		;
-		return url;
-	};
-
-
-	function ajax(url,payload) {
-		// 課題更新処理
-		$.ajax({
-			type: 'PATCH',
-			url: url,
-			data: payload
-		}).done(function (result) {
-			// 成功処理
-			// 課題一覧の再取得
-			get_tickets();
-			return result;
-		}).fail(function (result) {
-			// 失敗処理
-			console.log('失敗', result);
-			return result;
-		});
-	};
-
-
-	/** jQueryが読まれた時 */
-	$(document).ready(function () {
-		// 課題一覧の取得
-		get_tickets();
-	});
-
-
-	/** 検索タブを変更 */
-	$('input[name="issue-type"]:radio').on('change',function () {
-
-		var kbn = $('input[name="issue-type"]:checked').val();
-		if (kbn == '2'){
-			$('.select-update-user').css('visibility','visible');
-		}else{
-			$('.select-update-user').css('visibility','hidden');
-		}
-
-		// 課題一覧の取得
-		get_tickets();
-	});
-
-	
-	/** チェックボックス変更 */
-	$('input[name="status"]:checkbox').on('change',function () {
-
-		// 課題一覧の取得
-		get_tickets();
-	});
-	
 
 	/** 承認ボタン押下 */
 	$(document).on("click", ".approval", function () {
@@ -453,4 +409,72 @@ $(function () {
 		// 差戻処理
 		update_ticket_remand(issuekey,category);
 	});
+
+	
+	function create_url(issuekey) {
+		// url生成
+		var url = BASE_URL + '/api/v2/issues'
+		+ '/' + issuekey
+		+ '?' + 'apiKey=' + API_KEY
+		;
+		return url;
+	};
+
+
+	function ajax(url,payload) {
+		// 課題更新処理
+		$.ajax({
+			type: 'PATCH',
+			url: url,
+			data: payload
+		}).done(function (result) {
+			// 成功処理
+			// 課題一覧の再取得
+			get_tickets();
+			return result;
+		}).fail(function (result) {
+			// 失敗処理
+			console.log('失敗', result);
+			return result;
+		});
+	};
 });
+
+/**課題添付ファイルの取得 */
+function getFile(issueKey,file_id,file_name){
+	var url = BASE_URL + '/api/v2/issues' +
+		'/' + issueKey +
+		'/attachments' +
+		'/' + file_id + 
+		'?' + 'apiKey=' + API_KEY;
+
+	fetch(url)
+	.then(response => {
+	  if (!response.ok) {
+		// ステータスコードが成功（200）でない場合はエラーメッセージを表示
+		throw new Error(`Error: ${response.status} - ${response.statusText}`);
+	  }
+	  // ファイルデータをBlob形式で取得
+	  return response.blob();
+	})
+	.then(blob  => {
+	  // Blobからダウンロード用のURLを作成
+	  const downloadUrl = window.URL.createObjectURL(blob);
+	  const a = document.createElement('a');
+	  a.href = downloadUrl;
+  
+	  a.download = file_name;  // ファイル名を指定
+	  document.body.appendChild(a);
+	  a.click();
+	  
+	  // ダウンロードリンクを削除
+	  a.remove();
+	  
+	  // オブジェクトURLを解放
+	  window.URL.revokeObjectURL(downloadUrl);
+	})
+	.catch(error => {
+	  // エラー時の処理
+	  console.error('Error fetching issue:', error);
+	});
+};
